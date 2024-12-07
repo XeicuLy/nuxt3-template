@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   srcDir: 'src/',
   ssr: true,
-  modules: ['@nuxt/eslint', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@pinia/nuxt', '@nuxt/test-utils/module'],
+  modules: ['@nuxt/eslint', 'shadcn-nuxt', '@pinia/nuxt', '@nuxt/test-utils/module', '@nuxt/ui'],
   runtimeConfig: {
     public: {
       GTM_ID: process.env.GTM_ID,
