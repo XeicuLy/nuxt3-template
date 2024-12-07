@@ -108,6 +108,9 @@ importers:
       eslint-plugin-reactive-value-suffix:
         specifier: 2.0.0
         version: 2.0.0
+      flexsearch:
+        specifier: 0.7.43
+        version: 0.7.43
       glob:
         specifier: 11.0.0
         version: 11.0.0
@@ -135,6 +138,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: 0.6.8
         version: 0.6.8(prettier@3.3.3)
+      shiki-es:
+        specifier: 0.14.0
+        version: 0.14.0
       typescript:
         specifier: 5.6.3
         version: 5.6.3
@@ -144,6 +150,12 @@ importers:
       vitest:
         specifier: 2.1.5
         version: 2.1.5(@types/node@22.9.0)(@vitest/ui@2.1.5)(happy-dom@15.11.6)(terser@5.37.0)
+      vscode-oniguruma:
+        specifier: 2.0.1
+        version: 2.0.1
+      vscode-textmate:
+        specifier: 9.1.0
+        version: 9.1.0
       vue-eslint-parser:
         specifier: 9.4.3
         version: 9.4.3(eslint@9.14.0(jiti@2.4.1))
@@ -2984,6 +2996,9 @@ packages:
   flexsearch@0.7.21:
     resolution: {integrity: sha512-W7cHV7Hrwjid6lWmy0IhsWDFQboWSng25U3VVywpHOTJnnAZNPScog67G+cVpeX9f7yDD21ih0WDrMMT+JoaYg==}
 
+  flexsearch@0.7.43:
+    resolution: {integrity: sha512-c5o/+Um8aqCSOXGcZoqZOm+NqtVwNsvVpWv6lfmSclU954O3wvQKxxK8zj74fPaSJbXpSLTs4PRhh+wnoCXnKg==}
+
   foreground-child@3.3.0:
     resolution: {integrity: sha512-Ld2g8rrAyMYFXBhEqMz8ZAHBi4J4uS1i/CxGMDnjyFWddMXLVcDp051DZfu+t7+ab7Wv6SMqpWmyFIj5UbfFvg==}
     engines: {node: '>=14'}
@@ -4934,6 +4949,10 @@ packages:
     resolution: {integrity: sha512-AzqKpGKjrj7EM6rKVQEPpB288oCfnrEIuyoT9cyF4nmGa7V8Zk6f7RRqYisX8X9m+Q7bd632aZW4ky7EhbQztA==}
     engines: {node: '>= 0.4'}
 
+  shiki-es@0.14.0:
+    resolution: {integrity: sha512-e+/aueHx0YeIEut6RXC6K8gSf0PykwZiHD7q7AHtpTW8Kd8TpFUIWqTwhAnrGjOyOMyrwv+syr5WPagMpDpVYQ==}
+    deprecated: Please migrate to https://github.com/antfu/shikiji
+
   shiki-es@0.2.0:
     resolution: {integrity: sha512-RbRMD+IuJJseSZljDdne9ThrUYrwBwJR04FvN4VXpfsU3MNID5VJGHLAD5je/HGThCyEKNgH+nEkSFEWKD7C3Q==}
     deprecated: Please migrate to https://github.com/antfu/shikiji
@@ -5639,6 +5658,12 @@ packages:
   vscode-languageserver@7.0.0:
     resolution: {integrity: sha512-60HTx5ID+fLRcgdHfmz0LDZAXYEV68fzwG0JWwEPBode9NuMYTIxuYXPg4ngO8i8+Ou0lM7y6GzaYWbiDL0drw==}
     hasBin: true
+
+  vscode-oniguruma@2.0.1:
+    resolution: {integrity: sha512-poJU8iHIWnC3vgphJnrLZyI3YdqRlR27xzqDmpPXYzA93R4Gk8z7T6oqDzDoHjoikA2aS82crdXFkjELCdJsjQ==}
+
+  vscode-textmate@9.1.0:
+    resolution: {integrity: sha512-lxKSVp2DkFOx9RDAvpiYUrB9/KT1fAfi1aE8CBGstP8N7rLF+Seifj8kDA198X0mYj1CjQUC+81+nQf8CO0nVA==}
 
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
@@ -9152,6 +9177,8 @@ snapshots:
 
   flexsearch@0.7.21: {}
 
+  flexsearch@0.7.43: {}
+
   foreground-child@3.3.0:
     dependencies:
       cross-spawn: 7.0.6
@@ -11322,6 +11349,8 @@ snapshots:
 
   shell-quote@1.8.2: {}
 
+  shiki-es@0.14.0: {}
+
   shiki-es@0.2.0: {}
 
   siginfo@2.0.0: {}
@@ -12090,6 +12119,10 @@ snapshots:
   vscode-languageserver@7.0.0:
     dependencies:
       vscode-languageserver-protocol: 3.16.0
+
+  vscode-oniguruma@2.0.1: {}
+
+  vscode-textmate@9.1.0: {}
 
   vscode-uri@3.0.8: {}
 
