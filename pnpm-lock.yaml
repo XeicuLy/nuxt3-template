@@ -106,8 +106,8 @@ importers:
         specifier: 11.0.0
         version: 11.0.0
       globals:
-        specifier: 15.12.0
-        version: 15.12.0
+        specifier: 15.14.0
+        version: 15.14.0
       happy-dom:
         specifier: 15.11.6
         version: 15.11.6
@@ -2898,8 +2898,8 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@15.12.0:
-    resolution: {integrity: sha512-1+gLErljJFhbOVyaetcwJiJ4+eLe45S2E7P5UiZ9xGfeq3ATQf5DOv9G7MH3gGbKQLkzmNh2DxfZwLdw+j6oTQ==}
+  globals@15.14.0:
+    resolution: {integrity: sha512-OkToC372DtlQeje9/zHIo5CT8lRP/FUgEOKBEhU4e0abL7J7CD24fD9ohiLN5hagG/kWCYj4K5oaxxtj2Z0Dig==}
     engines: {node: '>=18'}
 
   globby@14.0.2:
@@ -6209,7 +6209,7 @@ snapshots:
       eslint-plugin-unicorn: 56.0.1(eslint@9.14.0(jiti@2.4.1))
       eslint-plugin-vue: 9.32.0(eslint@9.14.0(jiti@2.4.1))
       eslint-processor-vue-blocks: 0.1.2(@vue/compiler-sfc@3.5.13)(eslint@9.14.0(jiti@2.4.1))
-      globals: 15.12.0
+      globals: 15.14.0
       local-pkg: 0.5.1
       pathe: 1.1.2
       vue-eslint-parser: 9.4.3(eslint@9.14.0(jiti@2.4.1))
@@ -8152,7 +8152,7 @@ snapshots:
       core-js-compat: 3.39.0
       eslint: 9.14.0(jiti@2.4.1)
       esquery: 1.6.0
-      globals: 15.12.0
+      globals: 15.14.0
       indent-string: 4.0.0
       is-builtin-module: 3.2.1
       jsesc: 3.0.2
@@ -8572,7 +8572,7 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@15.12.0: {}
+  globals@15.14.0: {}
 
   globby@14.0.2:
     dependencies:
