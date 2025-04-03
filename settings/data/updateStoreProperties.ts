@@ -1,15 +1,33 @@
 import { globSync } from 'glob';
 import { STORE_DIR, PROPERTY_TYPE } from './utils/constant';
-import { writeJsonFile } from './utils/file';
+import { writeJsonFile, readFile } from './utils/file';
 import { echoWarningLog } from './utils/logger';
-import { extractGettersProperties, extractStateProperties } from './utils/parser';
+import { createSourceFileFromContent } from './utils/parser/astUtils';
+import { findDefineStoreCallsAndExtractGettersProperties } from './utils/parser/getters';
+import { findDefineStoreCallsAndExtractStateProperties } from './utils/parser/state';
+import type { PropertyType, UpdateOptions } from '../types/customRule';
 
-type PropertyType = 'STATE' | 'GETTERS';
+/**
+ * 1つのファイルから複数タイプのプロパティを同時に抽出する関数
+ */
+const extractPropertiesFromFile = (
+  filePath: string,
+  propertyType: (typeof PROPERTY_TYPE)[PropertyType]['NAME'],
+): string[] => {
+  try {
+    const fileContent = readFile(filePath);
+    const sourceFile = createSourceFileFromContent(filePath, fileContent);
 
-interface UpdateOptions {
-  propertyType: (typeof PROPERTY_TYPE)[PropertyType]['NAME'];
-  outputPath: (typeof PROPERTY_TYPE)[PropertyType]['OUTPUT_FILE_PATH'];
-}
+    if (propertyType === PROPERTY_TYPE.STATE.NAME) {
+      return findDefineStoreCallsAndExtractStateProperties(sourceFile);
+    } else {
+      return findDefineStoreCallsAndExtractGettersProperties(sourceFile);
+    }
+  } catch (error) {
+    echoWarningLog(`Error extracting ${propertyType} from file ${filePath}:`, error);
+    return [];
+  }
+};
 
 /**
  * ストアプロパティを抽出してJSONファイルを更新する汎用関数
@@ -23,19 +41,8 @@ export const updateStoreProperties = async ({ propertyType, outputPath }: Update
       return;
     }
 
-    // 抽出関数を選択
-    const extractFunction =
-      propertyType === PROPERTY_TYPE.STATE.NAME ? extractStateProperties : extractGettersProperties;
-
-    // ファイルからプロパティを抽出
-    const allPropertyValues = storeFiles.flatMap((filePath) => {
-      try {
-        return extractFunction(filePath);
-      } catch (error) {
-        echoWarningLog(`Error extracting ${propertyType} from file ${filePath}:`, error);
-        return [];
-      }
-    });
+    // ファイルからプロパティを抽出して配列をフラット化
+    const allPropertyValues = storeFiles.flatMap((filePath) => extractPropertiesFromFile(filePath, propertyType));
 
     // 重複を除去
     const uniquePropertyValues = [...new Set(allPropertyValues)];
