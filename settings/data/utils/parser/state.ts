@@ -1,43 +1,13 @@
-import {
-  isArrowFunction,
-  isIdentifier,
-  isObjectLiteralExpression,
-  isPropertyAssignment,
-  type CallExpression,
-  type ObjectLiteralElementLike,
-  type ObjectLiteralExpression,
-  type SourceFile,
-} from 'typescript';
-import { processNodeRecursively } from './astUtils';
+import { isArrowFunction, isPropertyAssignment, type ObjectLiteralElementLike, type SourceFile } from 'typescript';
+import { PROPERTY_TYPE } from '../constant';
+import { findDefineStoreCallsAndExtractProperties } from './common';
 import { extractPropertyNamesFromReturnExpression, extractReturnExpressionFromArrowFunction } from './object';
-import { isDefineStoreFunctionCall } from './pinia';
 
 /**
- * オブジェクトリテラルからstateプロパティを見つける純粋関数
- *
- * @param optionsObject stateプロパティを検索するオプションオブジェクト
- * @returns stateプロパティのノード、または見つからない場合はundefined
+ * state要素から含まれるプロパティ名を抽出する関数
  */
-const findStatePropertyInOptions = (optionsObject: ObjectLiteralExpression): ObjectLiteralElementLike | undefined => {
-  return optionsObject.properties.find(
-    (property) => isPropertyAssignment(property) && isIdentifier(property.name) && property.name.text === 'state',
-  );
-};
-
-/**
- * stateプロパティを処理して含まれるプロパティ名を抽出する純粋関数
- *
- * @param sourceFile ソースファイル
- * @param optionsObject stateプロパティを含むオプションオブジェクト
- * @returns 抽出されたstateプロパティ名の配列
- */
-const processStatePropertyAndExtractNames = (
-  sourceFile: SourceFile,
-  optionsObject: ObjectLiteralExpression,
-): string[] => {
-  const stateProperty = findStatePropertyInOptions(optionsObject);
-
-  if (!stateProperty || !isPropertyAssignment(stateProperty) || !isArrowFunction(stateProperty.initializer)) {
+const extractStatePropertyNames = (sourceFile: SourceFile, stateProperty: ObjectLiteralElementLike): string[] => {
+  if (!isPropertyAssignment(stateProperty) || !isArrowFunction(stateProperty.initializer)) {
     return [];
   }
 
@@ -50,31 +20,8 @@ const processStatePropertyAndExtractNames = (
 };
 
 /**
- * defineStoreの呼び出しからプロパティを抽出する純粋関数
- *
- * @param sourceFile ソースファイル
- * @param callExpression defineStore関数の呼び出し式
- * @returns 抽出されたプロパティ名の配列
- */
-const extractPropertyNamesFromDefineStoreCall = (sourceFile: SourceFile, callExpression: CallExpression): string[] => {
-  const optionsArgument = callExpression.arguments[1];
-
-  if (!optionsArgument || !isObjectLiteralExpression(optionsArgument)) {
-    return [];
-  }
-
-  return processStatePropertyAndExtractNames(sourceFile, optionsArgument);
-};
-
-/**
- * ソースファイルからdefineStoreの呼び出しを見つけてステートプロパティを抽出する純粋関数
- *
- * @param sourceFile ソースファイル
- * @returns 抽出されたステートプロパティ名の配列
+ * ソースファイルからdefineStoreの呼び出しを見つけてstateプロパティを抽出する純粋関数
  */
 export const findDefineStoreCallsAndExtractStateProperties = (sourceFile: SourceFile): string[] => {
-  const stateList = processNodeRecursively(sourceFile, isDefineStoreFunctionCall, (callExpression) =>
-    extractPropertyNamesFromDefineStoreCall(sourceFile, callExpression),
-  );
-  return stateList;
+  return findDefineStoreCallsAndExtractProperties(sourceFile, PROPERTY_TYPE.STATE.NAME, extractStatePropertyNames);
 };

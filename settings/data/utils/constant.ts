@@ -10,3 +10,14 @@ export const STORE_DIR = path.join(PROJECT_ROOT, 'src/store');
 export const STORE_DATA_DIR = path.join(PROJECT_ROOT, 'settings/data/json');
 export const STORE_STATE_LIST_PATH = path.join(STORE_DATA_DIR, 'store-state-list.json');
 export const STORE_GETTERS_LIST_PATH = path.join(STORE_DATA_DIR, 'store-getters-list.json');
+
+export const PROPERTY_TYPE = {
+  STATE: {
+    NAME: 'state',
+    OUTPUT_FILE_PATH: STORE_STATE_LIST_PATH,
+  } as const,
+  GETTERS: {
+    NAME: 'getters',
+    OUTPUT_FILE_PATH: STORE_GETTERS_LIST_PATH,
+  } as const,
+} as const;

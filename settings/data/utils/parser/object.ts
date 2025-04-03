@@ -14,7 +14,7 @@ import {
   type SourceFile,
 } from 'typescript';
 import { flattenArraysOfStrings, processNodeRecursively } from './astUtils';
-import type { VariableDeclarationWithObjectInitializer } from '~~/settings/types/ast';
+import type { VariableDeclarationWithObjectInitializer } from '~~/settings/types/customRule';
 
 /**
  * オブジェクトリテラルからプロパティ名を抽出する純粋関数
