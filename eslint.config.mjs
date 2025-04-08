@@ -4,7 +4,7 @@ import { includeIgnoreFile } from '@eslint/compat';
 import tsEslintParser from '@typescript-eslint/parser';
 import vitest from '@vitest/eslint-plugin';
 import vuePrettierConfig from '@vue/eslint-config-prettier';
-import eslintReactiveValueSuffix from 'eslint-plugin-reactive-value-suffix';
+// import eslintReactiveValueSuffix from 'eslint-plugin-reactive-value-suffix';
 import globals from 'globals';
 import vueEslintParser from 'vue-eslint-parser';
 import withNuxt from './.nuxt/eslint.config.mjs';
@@ -31,7 +31,7 @@ export default withNuxt([
     },
     plugins: {
       'coding-rules': eslintCustomRulesPlugin,
-      'reactive-value-suffix': eslintReactiveValueSuffix,
+      // 'reactive-value-suffix': eslintReactiveValueSuffix,
     },
     rules: {
       'no-console': 'warn',
@@ -56,7 +56,8 @@ export default withNuxt([
         },
       ],
       'coding-rules/store-state-suffix': 'error',
-      'reactive-value-suffix/suffix': ['error', { functionNamesToIgnoreValueCheck: [] }],
+      'coding-rules/reactive-value-suffix': 'error',
+      // 'reactive-value-suffix/suffix': ['error', { functionNamesToIgnoreValueCheck: [] }],
     },
   },
   {

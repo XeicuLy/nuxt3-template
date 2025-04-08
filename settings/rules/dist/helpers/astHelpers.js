@@ -102,3 +102,8 @@ export function isStoreToRefsCall(node) {
 export function hasStateNameWithoutStateSuffix(originalName, nameToCheck, stateList) {
   return stateList.includes(originalName) && !nameToCheck.endsWith('State');
 }
+export const getTypeString = (node, typeChecker, parserServices) => {
+  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node);
+  const type = typeChecker.getTypeAtLocation(tsNode);
+  return typeChecker.typeToString(type);
+};

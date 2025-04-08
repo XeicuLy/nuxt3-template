@@ -14,6 +14,8 @@ import type {
   ASTNodeType,
   AssignmentPattern,
 } from '../types/eslint.js';
+import type { ParserServices } from '@typescript-eslint/utils';
+import type { TypeChecker } from 'typescript';
 
 const { AST_NODE_TYPES } = TSESTree;
 
@@ -149,7 +151,7 @@ export function addDestructuredFunctionNames(node: VariableDeclarator, list: str
  * @param {string[]} ignoredFunctionNames 無視する関数名のリスト
  * @returns {boolean} 指定された関数の引数であるかどうか
  */
-export function isArgumentOfFunction(node: Identifier, ignoredFunctionNames: string[]): boolean {
+export function isArgumentOfFunction(node: Identifier, ignoredFunctionNames: readonly string[]): boolean {
   const callExpression = getAncestorCallExpression(node);
   return (
     isIdentifier(callExpression?.callee) &&
@@ -164,7 +166,7 @@ export function isArgumentOfFunction(node: Identifier, ignoredFunctionNames: str
  * @param {string[]} ignoredFunctionNames 無視する関数名のリスト
  * @returns {boolean} 関数名が一致するかどうか
  */
-export function isMatchingFunctionName(name: string, ignoredFunctionNames: string[]): boolean {
+export function isMatchingFunctionName(name: string, ignoredFunctionNames: readonly string[]): boolean {
   return COMPOSABLES_FUNCTION_PATTERN.test(name) || ignoredFunctionNames.includes(name);
 }
 
@@ -224,7 +226,7 @@ export function isPropertyValue(node: Node): boolean {
  * @param {string[]} functionArguments 関数引数のリスト
  * @returns {boolean} 引数かどうか
  */
-export function isFunctionArgument(node: Identifier, functionArguments: string[]): boolean {
+export function isFunctionArgument(node: Identifier, functionArguments: readonly string[]): boolean {
   return functionArguments.includes(node.name);
 }
 
@@ -257,7 +259,7 @@ export function isOriginalDeclaration(node: Node): boolean {
 export function isDestructuredFunctionArgument(
   parent: Node,
   grandParent: Node | undefined,
-  destructuredFunctions: string[],
+  destructuredFunctions: readonly string[],
 ): boolean {
   return (
     (isCallExpression(parent) && isIdentifier(parent.callee) && destructuredFunctions.includes(parent.callee.name)) ||
@@ -290,3 +292,16 @@ export function hasStateNameWithoutStateSuffix(
 ): boolean {
   return stateList.includes(originalName) && !nameToCheck.endsWith('State');
 }
+
+/**
+ * ノードの型文字列を取得する
+ */
+export const getTypeString = <T extends Node = Node>(
+  node: T,
+  typeChecker: TypeChecker,
+  parserServices: ParserServices,
+): string => {
+  const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node);
+  const type = typeChecker.getTypeAtLocation(tsNode);
+  return typeChecker.typeToString(type);
+};
