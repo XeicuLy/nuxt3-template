@@ -13,6 +13,9 @@ const isPropertyValue = (node) =>
   node.type === AST_NODE_TYPES.Property && node.parent?.type === AST_NODE_TYPES.ObjectExpression;
 const isOriginalDeclaration = (node) =>
   node.type === AST_NODE_TYPES.VariableDeclarator || node.type === AST_NODE_TYPES.ArrayPattern;
+const isArrayLiteralElement = (node) => {
+  return node.parent?.type === AST_NODE_TYPES.ArrayExpression;
+};
 const isArgumentOfFunction = (node, ignoredFunctionNames) => {
   const parent = node.parent;
   if (parent?.type !== AST_NODE_TYPES.CallExpression) {
@@ -142,6 +145,18 @@ const isSpecialFunctionArgument = (node, specialFunctions) => {
   }
   return callExpression.arguments.includes(node);
 };
+const isComposablesFunctionArgument = (node) => {
+  const callExpression = findAncestorCallExpression(node);
+  if (!callExpression) return false;
+  const COMPOSABLES_FUNCTION_PATTERN = /^use[A-Z]/;
+  if (
+    callExpression.callee.type !== AST_NODE_TYPES.Identifier ||
+    !COMPOSABLES_FUNCTION_PATTERN.test(callExpression.callee.name)
+  ) {
+    return false;
+  }
+  return callExpression.arguments.includes(node);
+};
 const shouldSuppressWarning = (node, parent, reactiveVariables, composableFunctions, ignoredFunctionNames) => {
   const isDeclaration = isVariableDeclarator(parent) || isOriginalDeclaration(parent);
   const isObjectPatternProperty =
@@ -150,9 +165,11 @@ const shouldSuppressWarning = (node, parent, reactiveVariables, composableFuncti
   const isObjectMember = isMemberExpression(parent) && parent.property !== node;
   const isObjectPropertyKey = isObjectKey(parent, node);
   const isPropertyValueAccess = isPropertyValue(parent);
+  const isArrayElement = isArrayLiteralElement(node);
   const isWatchArg = isWatchArgument(node);
   const isSpecialFunctionArg = isSpecialFunctionArgument(node, composableFunctions);
   const isIgnoredFunctionArg = isArgumentOfFunction(node, ignoredFunctionNames);
+  const isComposablesArg = isComposablesFunctionArgument(node);
   return (
     isDeclaration ||
     isObjectPatternProperty ||
@@ -162,7 +179,9 @@ const shouldSuppressWarning = (node, parent, reactiveVariables, composableFuncti
     isPropertyValueAccess ||
     isWatchArg ||
     isSpecialFunctionArg ||
-    isIgnoredFunctionArg
+    isIgnoredFunctionArg ||
+    isArrayElement ||
+    isComposablesArg
   );
 };
 const processIdentifier = (

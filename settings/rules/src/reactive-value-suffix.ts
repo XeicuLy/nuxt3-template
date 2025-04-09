@@ -10,7 +10,6 @@ const MESSAGE_ID = 'reactiveValueSuffix' as const;
 type RuleOptions = {
   functionNamesToIgnoreValueCheck?: string[];
 };
-
 type RuleContext = Readonly<TSESLint.RuleContext<typeof MESSAGE_ID, RuleOptions[]>>;
 
 // ----------------------------------------------------------------------------
@@ -41,6 +40,10 @@ const isPropertyValue = (node: TSESTree.Node): boolean =>
 
 const isOriginalDeclaration = (node: TSESTree.Node): boolean =>
   node.type === AST_NODE_TYPES.VariableDeclarator || node.type === AST_NODE_TYPES.ArrayPattern;
+
+const isArrayLiteralElement = (node: TSESTree.Identifier): boolean => {
+  return node.parent?.type === AST_NODE_TYPES.ArrayExpression;
+};
 
 const isArgumentOfFunction = (node: TSESTree.Identifier, ignoredFunctionNames: readonly string[]): boolean => {
   const parent = node.parent;
@@ -265,6 +268,23 @@ const isSpecialFunctionArgument = (node: TSESTree.Identifier, specialFunctions: 
   return callExpression.arguments.includes(node);
 };
 
+// composables関数の引数として使用されているかチェック
+const isComposablesFunctionArgument = (node: TSESTree.Identifier): boolean => {
+  const callExpression = findAncestorCallExpression(node);
+  if (!callExpression) return false;
+
+  const COMPOSABLES_FUNCTION_PATTERN = /^use[A-Z]/;
+
+  if (
+    callExpression.callee.type !== AST_NODE_TYPES.Identifier ||
+    !COMPOSABLES_FUNCTION_PATTERN.test(callExpression.callee.name)
+  ) {
+    return false;
+  }
+
+  return callExpression.arguments.includes(node);
+};
+
 // ----------------------------------------------------------------------------
 // 識別子処理関数
 // ----------------------------------------------------------------------------
@@ -286,10 +306,14 @@ const shouldSuppressWarning = (
   const isObjectPropertyKey = isObjectKey(parent, node);
   const isPropertyValueAccess = isPropertyValue(parent);
 
+  // 配列リテラル内の要素かどうか
+  const isArrayElement = isArrayLiteralElement(node);
+
   // 関数パラメータ関連
   const isWatchArg = isWatchArgument(node);
   const isSpecialFunctionArg = isSpecialFunctionArgument(node, composableFunctions);
   const isIgnoredFunctionArg = isArgumentOfFunction(node, ignoredFunctionNames);
+  const isComposablesArg = isComposablesFunctionArgument(node);
 
   // いずれかの条件が真であれば警告を抑制
   return (
@@ -301,7 +325,9 @@ const shouldSuppressWarning = (
     isPropertyValueAccess ||
     isWatchArg ||
     isSpecialFunctionArg ||
-    isIgnoredFunctionArg
+    isIgnoredFunctionArg ||
+    isArrayElement ||
+    isComposablesArg
   );
 };
 
