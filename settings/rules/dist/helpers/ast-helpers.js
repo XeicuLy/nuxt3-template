@@ -1,0 +1,12 @@
+import { AST_NODE_TYPES } from '@typescript-eslint/utils';
+export const isIdentifier = (node) => node.type === AST_NODE_TYPES.Identifier;
+export const isMemberExpression = (node) => node.type === AST_NODE_TYPES.MemberExpression;
+export const isProperty = (node) => node.type === AST_NODE_TYPES.Property;
+export const isVariableDeclarator = (node) => node.type === AST_NODE_TYPES.VariableDeclarator;
+export const isArrayPattern = (node) => node.type === AST_NODE_TYPES.ArrayPattern;
+export const isArrayExpression = (node) => node.type === AST_NODE_TYPES.ArrayExpression;
+export const isCallExpression = (node) => node.type === AST_NODE_TYPES.CallExpression;
+export const isObjectPattern = (node) => node.type === AST_NODE_TYPES.ObjectPattern;
+export const isObjectExpression = (node) => node.type === AST_NODE_TYPES.ObjectExpression;
+export const isTSNonNullExpression = (node) => node.type === AST_NODE_TYPES.TSNonNullExpression;
+export const isVariableDeclaration = (node) => node.type === AST_NODE_TYPES.VariableDeclaration;
